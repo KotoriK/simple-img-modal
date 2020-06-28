@@ -16,7 +16,7 @@ export class Modal extends React.Component<ModalProps>{
     render() {
         const React = this.React, opacity = this.props.imgSrc && this.props.opacity
         return (<div
-            onClick={() => this.props.handleChangeOpacity(!this.props.opacity, this.props.imgSrc)}
+            onClick={() => this.props.handleChangeOpacity(false, this.props.imgSrc)}
             style={{
                 opacity: opacity ? 1 : 0,
                 visibility: (opacity ? 'visible' : 'hidden'),
