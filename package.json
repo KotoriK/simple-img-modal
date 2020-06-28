@@ -1,0 +1,34 @@
+{
+  "name": "simple-img-modal",
+  "version": "1.0.0",
+  "description": "A simple modal view for image.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "parcel index.html --out-dir dev",
+    "dev": "parcel index.html --no-source-maps --out-dir dev",
+    "build": "parcel build src/index.ts --out-dir dist/ --experimental-scope-hoisting"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KotoriK/simple-img-modal.git"
+  },
+  "keywords": [
+    "modal"
+  ],
+  "author": "KotoriK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KotoriK/simple-img-modal/issues"
+  },
+  "homepage": "https://github.com/KotoriK/simple-img-modal#readme",
+  "devDependencies": {
+    "@types/react": "^16.9.41",
+    "@types/react-dom": "^16.9.8",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}

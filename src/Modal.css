@@ -1,0 +1,23 @@
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.25);
+   transition: all 600ms ease-in ;
+}
+.modal-body{
+    margin:0.8rem;
+}
+
+
+/* 作者：heibaimeng
+  链接：https://juejin.im/post/5cf3d3ba5188257c6b5171fd
+  来源：掘金
+  著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。 */
