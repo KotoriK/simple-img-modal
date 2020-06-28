@@ -2,14 +2,15 @@ import { Modal } from './Modal'
 import { importReactBoth, importReactDOM } from './importReact'
 const container = document.getElementById('c')
 export function attachListeners(nodeList: NodeListOf<HTMLElement>) {
-    for (const ele of nodeList) {
+    nodeList.forEach((ele) => {
         ele.addEventListener('click', clickHandler)
-    }
+    })
 }
 export function removeListeners(nodeList: NodeListOf<HTMLElement>) {
-    for (const ele of nodeList) {
+
+    nodeList.forEach((ele) => {
         ele.removeEventListener('click', clickHandler)
-    }
+    })
 }
 export function clickHandler(e: Event) {
     showModal((e.target as HTMLImageElement).src)
