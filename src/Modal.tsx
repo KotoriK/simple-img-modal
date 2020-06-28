@@ -10,7 +10,6 @@ export interface ModalProps {
 
 export class Modal extends React.Component<ModalProps>{
     React
-
     constructor(props: ModalProps) {
         super(props)
         this.React = props.React

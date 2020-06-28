@@ -1,6 +1,6 @@
 import { Modal } from './Modal'
 import { importReactBoth, importReactDOM } from './importReact'
-const container = document.getElementById('c')
+const container = document.getElementById('imgmodal')
 export function attachListeners(nodeList: NodeListOf<HTMLElement>) {
     nodeList.forEach((ele) => {
         ele.addEventListener('click', clickHandler)
