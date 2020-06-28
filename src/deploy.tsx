@@ -1,6 +1,7 @@
 import { Modal } from './Modal'
 import { importReactBoth, importReactDOM } from './importReact'
 const container = document.getElementById('imgmodal')
+const regex = /(http[\S]+) ([0-9]+)w/i
 export function attachListeners(nodeList: NodeListOf<HTMLElement>) {
     nodeList.forEach((ele) => {
         ele.addEventListener('click', clickHandler)
@@ -13,8 +14,24 @@ export function removeListeners(nodeList: NodeListOf<HTMLElement>) {
     })
 }
 export function clickHandler(e: Event) {
-    showModal((e.target as HTMLImageElement).src)
-    console.warn((e.target as HTMLImageElement).src)
+    const img = e.target as HTMLImageElement
+    if (img.srcset) {
+        let maxPx = 0, maxPxUrl = ''
+        img.srcset.split(',').forEach((i) => {
+            const result = regex.exec(i)
+            if (result.length == 3) {
+                let nowPx = parseInt(result[2])
+                if (nowPx > maxPx) {
+                    maxPx = nowPx
+                    maxPxUrl = result[1]
+                }
+            }
+        })
+        showModal(maxPxUrl || img.src)
+    } else {
+        showModal(img.src)
+    }
+
 }
 export function showModal(imgSrc?: string) {
     updateModal(true, imgSrc)
