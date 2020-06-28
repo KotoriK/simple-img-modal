@@ -1,4 +1,3 @@
-import "./Modal.css";
 import React from "react";
 import ImageView from "./ImageView";
 export interface ModalProps {
