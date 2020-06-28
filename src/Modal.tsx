@@ -7,17 +7,14 @@ export interface ModalProps {
     handleChangeOpacity: (newOpacity: boolean, imgSrc?: string) => void
 }
 
-
 export class Modal extends React.Component<ModalProps>{
     React
     constructor(props: ModalProps) {
         super(props)
         this.React = props.React
     }
-
     render() {
-        const React = this.React
-        const opacity = this.props.imgSrc && this.props.opacity
+        const React = this.React, opacity = this.props.imgSrc && this.props.opacity
         return (<div
             onClick={() => this.props.handleChangeOpacity(!this.props.opacity, this.props.imgSrc)}
             style={{
@@ -39,7 +36,7 @@ export class Modal extends React.Component<ModalProps>{
             }
         >
             <div style={{ margin: '0.8rem' }}>
-                <ImageView src={this.props.imgSrc} width='100%' height='100%' />
+                <ImageView key={(this.props.imgSrc?this.props.imgSrc:'#').split('/').pop()} src={this.props.imgSrc} width='100%' height='100%' />
             </div>
         </div >
 
