@@ -1,5 +1,4 @@
 import { Modal } from './Modal'
-import { importReactBoth, importReactDOM } from './importReact'
 const container = document.getElementById('imgmodal')
 const regex = /(http[\S]+) ([0-9]+)w/i
 export function attachListeners(nodeList: NodeListOf<HTMLElement>) {
@@ -37,10 +36,10 @@ export function showModal(imgSrc?: string) {
     updateModal(true, imgSrc)
 }
 export function updateModal(opacity: boolean, imgSrc?: string) {
-    importReactBoth().then(([React, ReactDOM]) => { ReactDOM.render(<Modal imgSrc={imgSrc} React={React} opacity={opacity} handleChangeOpacity={updateModal} />, container) })
+    Promise.all([import('react'),import('react-dom')]).then(([React, ReactDOM]) => { ReactDOM.render(<Modal imgSrc={imgSrc} React={React} opacity={opacity} handleChangeOpacity={updateModal} />, container) })
 }
 export function hideModal() {
-    importReactDOM().then((ReactDOM) => {
+    import('react-dom').then((ReactDOM) => {
         ReactDOM.unmountComponentAtNode(container)
     })
 }
