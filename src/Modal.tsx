@@ -30,8 +30,8 @@ export class Modal extends React.Component<ModalProps>{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: ' rgba(0, 0, 0, 0.50)',
-                transition: ' all 550ms ease-in '
+                backgroundColor: 'rgba(0, 0, 0, 0.50)',
+                transition: 'all 550ms cubic-bezier(0.25,0.1,0.25,1)'
             }
             }
         >
