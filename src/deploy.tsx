@@ -14,7 +14,9 @@ export function removeListeners(nodeList: NodeListOf<HTMLElement>) {
 }
 export function clickHandler(e: Event) {
     const img = e.target as HTMLImageElement
-    if (img.srcset) {
+    if (img.dataset.fullUrl) {
+        showModal(img.dataset.fullUrl)
+    } else if (img.srcset) {
         let maxPx = 0, maxPxUrl = ''
         img.srcset.split(',').forEach((i) => {
             const result = regex.exec(i)
@@ -36,7 +38,7 @@ export function showModal(imgSrc?: string) {
     updateModal(true, imgSrc)
 }
 export function updateModal(opacity: boolean, imgSrc?: string) {
-    Promise.all([import('react'),import('react-dom')]).then(([React, ReactDOM]) => { ReactDOM.render(<Modal imgSrc={imgSrc} React={React} opacity={opacity} handleChangeOpacity={updateModal} />, container) })
+    Promise.all([import('react'), import('react-dom')]).then(([React, ReactDOM]) => { ReactDOM.render(<Modal imgSrc={imgSrc} React={React} opacity={opacity} handleChangeOpacity={updateModal} />, container) })
 }
 export function hideModal() {
     import('react-dom').then((ReactDOM) => {
