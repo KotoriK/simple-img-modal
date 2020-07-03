@@ -20,10 +20,11 @@ export interface ImageViewState {
  * @extends {React.Component<ImageViewProps, ImageViewState>}
  */
 export default class ImageView extends React.Component<ImageViewProps, ImageViewState> {
+    React
     constructor(props: ImageViewProps) {
         super(props)
         this.state = {
-            showIndicator: { level: IndicateLevel.PRELOAD },
+            showIndicator: { level: IndicateLevel.PRELOAD,style:{...props.style,width:props.width,height:props.height} },
             loaded: false
         }
     }

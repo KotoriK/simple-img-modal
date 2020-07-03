@@ -5,31 +5,30 @@ const SVG_PRELOAD = "https://cdn.jsdelivr.net/gh/YukiCat-Dev/FacePack/static/Rip
 const SVG_INFO = "https://cdn.jsdelivr.net/gh/YukiCat-Dev/FacePack/static/info.svg" */
 const SVG_ERROR = "https://cdn.jsdelivr.net/gh/YukiCat-Dev/FacePack/static/error.svg"
 export enum IndicateLevel {
-    PRELOAD , 
-/*     INFO , 
-    WARNING ,  */
-    ERROR 
+    PRELOAD,
+    /*     INFO , 
+        WARNING ,  */
+    ERROR
 }
-const IndicateLevelSVG=[SVG_PRELOAD,/* SVG_WARNING,SVG_INFO, */SVG_ERROR]
+const IndicateLevelSVG = [SVG_PRELOAD,/* SVG_WARNING,SVG_INFO, */SVG_ERROR]
 export interface IndicatorProps extends BaseComponentProps {
     level: IndicateLevel
     description?: string
 }
+
 /**
- * 一个指示错误的组件
+ *一个指示错误的组件
  *
  * @author KotoriK
  * @export
- * @class Indicator
- * @extends {Component<IndicatorProps>}
+ * @param {IndicatorProps} props
+ * @returns
  */
-export class Indicator extends React.Component<IndicatorProps> {
-    render() {
-        let descr = this.props.description
-        return (
-            <img src={IndicateLevelSVG[this.props.level]} alt={descr} style={this.props.style} />
-        )
-    }
+export function Indicator(props: IndicatorProps) {
+    const descr = props.description
+    return (
+        <img src={IndicateLevelSVG[props.level]} alt={descr} style={props.style} />
+    )
 }
 
 
