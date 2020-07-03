@@ -35,7 +35,7 @@ export class Modal extends React.Component<ModalProps>{
             }
             }
         >
-            <div style={{ margin: '0.8rem',overflow:'auto'}}>
+            <div style={{ margin: '0.8rem',overflow:'auto',maxHeight:'98vh'}}>
                 <ImageView key={(this.props.imgSrc?this.props.imgSrc:'#').split('/').pop()} src={this.props.imgSrc} width='100%' height='100%' />
             </div>
         </div >
