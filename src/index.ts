@@ -1,2 +1,2 @@
-import * as ImgModalDeploy from './deploy'
-export {ImgModalDeploy}
+import * as ImgModal from './deploy'
+export {ImgModal}
