@@ -1,12 +1,12 @@
 {
   "name": "simple-img-modal",
-  "version": "1.0.0",
+  "version": "1.2.7",
   "description": "A simple modal view for image.",
   "main": "dist/index.js",
   "scripts": {
     "test": "parcel index.html --out-dir dev",
     "dev": "parcel index.html --no-source-maps --out-dir dev",
-    "build": "parcel build src/index.ts --out-dir dist/ --experimental-scope-hoisting"
+    "build": "parcel build src/deployer.ts --out-dir dist/ --experimental-scope-hoisting"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
+  "sideEffects":["./src/deployer.ts"],
   "browserslist": [
     "since 2017-06"
   ]
