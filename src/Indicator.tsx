@@ -25,9 +25,8 @@ export interface IndicatorProps extends BaseComponentProps {
  * @returns
  */
 export function Indicator(props: IndicatorProps) {
-    const descr = props.description
     return (
-        <img src={IndicateLevelSVG[props.level]} alt={descr} style={props.style} />
+        <img src={IndicateLevelSVG[props.level]} alt={props.description} style={props.style} />
     )
 }
 
