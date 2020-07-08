@@ -20,7 +20,6 @@ export interface ImageViewState {
  * @extends {React.Component<ImageViewProps, ImageViewState>}
  */
 export default class ImageView extends React.Component<ImageViewProps, ImageViewState> {
-    React
     constructor(props: ImageViewProps) {
         super(props)
         this.state = {

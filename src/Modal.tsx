@@ -2,19 +2,13 @@ import React from "react";
 import ImageView from "./ImageView";
 export interface ModalProps {
     imgSrc?: string,
-    React: any,
     opacity: boolean,
     handleChangeOpacity: (newOpacity: boolean, imgSrc?: string) => void
 }
 
 export class Modal extends React.Component<ModalProps>{
-    React
-    constructor(props: ModalProps) {
-        super(props)
-        this.React = props.React
-    }
     render() {
-        const React = this.React, opacity = this.props.imgSrc && this.props.opacity
+        const  opacity = this.props.imgSrc && this.props.opacity
         return (<div
             onClick={() => this.props.handleChangeOpacity(false, this.props.imgSrc)}
             style={{
