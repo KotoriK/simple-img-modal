@@ -3,10 +3,12 @@
   "version": "1.2.7",
   "description": "A simple modal view for image.",
   "main": "dist/index.js",
+  "types":"dist/index.d.ts",
   "scripts": {
     "test": "parcel index.html --out-dir dev",
     "dev": "parcel index.html --no-source-maps --out-dir dev",
-    "build": "parcel build src/deployer.ts --out-dir dist/ --experimental-scope-hoisting"
+    "build": "parcel build src/deployer.ts --out-dir dist/ --experimental-scope-hoisting",
+    "publish": "tsc"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/KotoriK/simple-img-modal#readme",
   "devDependencies": {
+    "@types/node": "^14.0.19",
     "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.8",
     "parcel-bundler": "^1.12.4",
@@ -31,7 +34,9 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
-  "sideEffects":["./src/deployer.ts"],
+  "sideEffects": [
+    "./src/deployer.ts"
+  ],
   "browserslist": [
     "since 2017-06"
   ]
