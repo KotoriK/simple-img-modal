@@ -3,17 +3,40 @@ import ReactDOM from 'react-dom'
 import React from 'react'
 const container = document.getElementById('imgmodal')
 const regex = /(http[\S]+) ([0-9]+)w/i
-export function attachListeners(nodeList: NodeListOf<HTMLElement>) {
+
+/**
+ * Attach 'clickHandler' for each element in nodeList
+ *
+ * @author KotoriK
+ * @export
+ * @param {NodeListOf<HTMLElement>} nodeList
+ */
+export function _attachListeners(nodeList: NodeListOf<HTMLElement>) {
     nodeList.forEach((ele) => {
         ele.addEventListener('click', clickHandler)
     })
 }
-export function removeListeners(nodeList: NodeListOf<HTMLElement>) {
+/**
+ * Remove 'clickHandler' for each element in nodeList
+ *
+ * @author KotoriK
+ * @export
+ * @param {NodeListOf<HTMLElement>} nodeList
+ */
+export function _removeListeners(nodeList: NodeListOf<HTMLElement>) {
 
     nodeList.forEach((ele) => {
         ele.removeEventListener('click', clickHandler)
     })
 }
+
+/**
+ * Handle clicks on Image
+ *
+ * @author KotoriK
+ * @export
+ * @param {Event} e
+ */
 export function clickHandler(e: Event) {
     const img = e.target as HTMLImageElement
     if (img.dataset.fullUrl) {
@@ -37,11 +60,19 @@ export function clickHandler(e: Event) {
 
 }
 export function showModal(imgSrc?: string) {
-    updateModal(true, imgSrc)
+    _updateModal(true, imgSrc)
 }
-export function updateModal(opacity: boolean, imgSrc?: string) {
-    ReactDOM.render(<Modal imgSrc={imgSrc} opacity={opacity} handleChangeOpacity={updateModal} />, container)
+
+export function _updateModal(opacity: boolean, imgSrc?: string) {
+    ReactDOM.render(<Modal imgSrc={imgSrc} opacity={opacity} handleChangeOpacity={_updateModal} />, container)
 }
+
+/**
+ * Unload Modal from DOM
+ *
+ * @author KotoriK
+ * @export
+ */
 export function hideModal() {
     ReactDOM.unmountComponentAtNode(container)
 }
