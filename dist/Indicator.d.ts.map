@@ -1,1 +1,0 @@
-{"version":3,"file":"Indicator.d.ts","sourceRoot":"","sources":["../src/Indicator.tsx"],"names":[],"mappings":";AACA,OAAO,kBAAkB,MAAM,sBAAsB,CAAC;AAKtD,oBAAY,aAAa;IACrB,OAAO,IAAA;IAGP,KAAK,IAAA;CACR;AAED,MAAM,WAAW,cAAe,SAAQ,kBAAkB;IACtD,KAAK,EAAE,aAAa,CAAA;IACpB,WAAW,CAAC,EAAE,MAAM,CAAA;CACvB;AAED;;;;;;;GAOG;AACH,wBAAgB,SAAS,CAAC,KAAK,EAAE,cAAc,eAI9C"}
