@@ -10,14 +10,17 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.50);
-   transition: all 600ms ease-in ;
+    transition: all 400ms ease-in;
 }
-.modal-body{
-    margin:0.8rem;
+.modal-body {
+    margin: 0.8rem;
+    overflow: auto;
+    max-height: 98vh;
 }
 
 
- /*CSS contributor 
+
+/*CSS contributor 
     作者：heibaimeng
     链接：https://juejin.im/post/5cf3d3ba5188257c6b5171fd
     来源：掘金

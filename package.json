@@ -3,7 +3,7 @@
   "version": "1.2.7",
   "description": "A simple modal view for image.",
   "main": "dist/index.js",
-  "types":"dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "parcel index.html --out-dir dev",
     "dev": "parcel index.html --no-source-maps --out-dir dev",
@@ -27,15 +27,22 @@
     "@types/node": "^14.0.19",
     "@types/react": "^16.9.41",
     "@types/react-dom": "^16.9.8",
+    "@types/react-window": "^1.8.2",
     "parcel-bundler": "^1.12.4",
+    "sass": "^1.26.10",
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@popperjs/core": "^2.4.4",
+    "exifreader": "^3.12.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-collapse": "^5.0.1",
+    "react-dom": "^16.13.1",
+    "react-popper": "^2.2.3"
   },
   "sideEffects": [
-    "./src/deployer.ts"
+    "./src/deployer.ts",
+    "./src/deploy.tsx"
   ],
   "browserslist": [
     "since 2017-06"

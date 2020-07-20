@@ -1,7 +1,8 @@
-import { Modal } from './Modal'
 import ReactDOM from 'react-dom'
-import React from 'react'
-const container = document.getElementById('imgmodal')
+import  { ComponentClass, FunctionComponent, createElement } from 'react'
+import {  ImageModalProps } from './ImageModal'
+var container: HTMLElement
+var usingModal: ComponentClass<ImageModalProps> | FunctionComponent<ImageModalProps> 
 const regex = /(http[\S]+) ([0-9]+)w/i
 
 /**
@@ -41,6 +42,7 @@ export function clickHandler(e: Event) {
     const img = e.target as HTMLImageElement
     if (img.dataset.fullUrl) {
         showModal(img.dataset.fullUrl)
+        return
     } else if (img.srcset) {
         let maxPx = 0, maxPxUrl = ''
         img.srcset.split(',').forEach((i) => {
@@ -54,6 +56,7 @@ export function clickHandler(e: Event) {
             }
         })
         showModal(maxPxUrl || img.src)
+        return
     } else {
         showModal(img.src)
     }
@@ -62,11 +65,12 @@ export function clickHandler(e: Event) {
 export function showModal(imgSrc?: string) {
     _updateModal(true, imgSrc)
 }
-
-export function _updateModal(opacity: boolean, imgSrc?: string) {
-    ReactDOM.render(<Modal imgSrc={imgSrc} opacity={opacity} handleChangeOpacity={_updateModal} />, container)
+function _updateModal(opacity: boolean, imgSrc?: string) {
+    ReactDOM.render(createElement(usingModal, {
+        imgSrc, opacity,
+        handleOpacityChange: _updateModal
+    }), container)
 }
-
 /**
  * Unload Modal from DOM
  *
@@ -76,4 +80,9 @@ export function _updateModal(opacity: boolean, imgSrc?: string) {
 export function hideModal() {
     ReactDOM.unmountComponentAtNode(container)
 }
-
+export function setContainer(newContainer: HTMLElement) {
+    container = newContainer
+}
+export function setImageModal(usingImageModal:  ComponentClass<ImageModalProps> | FunctionComponent<ImageModalProps>) {
+    usingModal = usingImageModal
+}

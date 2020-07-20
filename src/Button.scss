@@ -1,0 +1,16 @@
+$button-color-h:219deg;
+$button-color-s:95.5%;
+$button-color-l:41.9%;
+
+.button-map {
+    border-radius: 0.2rem;
+    padding: 1px;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+    text-decoration: underline;
+}
+
+.button-map:hover {
+    background-color: hsl($button-color-h, $button-color-s, $button-color-l + 15%);
+    text-decoration: none;
+}
