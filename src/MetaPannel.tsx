@@ -22,12 +22,12 @@ export const exifNameTranslateMap = new Map<string, string>([
     ['Flash', '闪光灯'],
     ['FocalLength', '焦距'],
     ['format', '格式'],
-  /*   ['GPSAltitude', '海拔'],
-    ['GPSAltitudeRef', '海拔相对'],
-    ['GPSLatitude', '纬度'],
-    ['GPSLongitude', '经度'],
-    ['GPSSpeed', '移动速度'],
-    ['GPSSpeedRef', '速度单位'], */
+    /*   ['GPSAltitude', '海拔'],
+      ['GPSAltitudeRef', '海拔相对'],
+      ['GPSLatitude', '纬度'],
+      ['GPSLongitude', '经度'],
+      ['GPSSpeed', '移动速度'],
+      ['GPSSpeedRef', '速度单位'], */
     ['ICC Description', 'ICC配置文件说明'],
     ['Image Width', '图像宽度'],
     ['Image Height', '图像高度'],
@@ -80,7 +80,6 @@ export default function MetaPannel(props: MetaPannelProps) {
                             if (interest === 'GPS') tryGPS = true
                             const value = imgExifs[interest]
                             if (value) return wrapper(index, interest, value)
-
                         })
                 }
                 if (tryGPS) {
@@ -93,29 +92,35 @@ export default function MetaPannel(props: MetaPannelProps) {
             }
         }, [props.interests, imgExifs])
         return (<>
-            {propLabels.length > 0 ? (propLabels) : (error ? error : <span>正在加载EXIF信息...</span>)}
+            {(propLabels.length > 0) ? propLabels : (error || <span>正在加载EXIF信息...</span>)}
         </>)
     } else {
         return (<></>)//跳过渲染
     }
-
 }
 
 function getCaption(propName: string) {
     const translate = exifNameTranslateMap.get(propName)
-    return translate ? translate : propName
+    return translate || propName
 }
 function error2Descr(e: Error | string) {
     const msg = typeof e === 'string' ? e : e.message
+    let prefix: string = "错误", desc: string
     switch (msg) {
         case 'Invalid image format':
-            return (<><strong>错误：</strong><span>不支持的图片格式。</span></>)
+            desc = '不支持的图片格式。'
+            break
         case 'Failed to fetch':
-            return (<><strong>错误：</strong><span>源站不允许脚本访问。</span></>)
+            desc = '源站不允许脚本访问。'
+            break
+        case 'No Exif data':
+            desc = "这个图片没有EXIF数据。"
+            break
         default:
             console.warn(e)
-            return (<><strong>错误：</strong><span>未知的错误。</span></>)
+            desc='未知的错误。'
     }
+    return (<><strong>{prefix}</strong><span>{desc}</span></>)
 }
 export type WrapperFunc = (key: string | number, tagName: string, tag: any) => JSX.Element
 /* function wrapper(key: string | number, tagName: string, tag: EXIF.XmpTag & EXIF.ValueTag) {
@@ -129,10 +134,7 @@ export type WrapperFunc = (key: string | number, tagName: string, tag: any) => J
             value={value} /></li>)
 } */
 function wrapper(key: string | number, tagName: string, tag: EXIF.XmpTag & EXIF.ValueTag) {
-    return (
-        <li key={key}>
-            <PropLabel caption={getCaption(tagName)}
-                value={tag.description} /></li>)
+    return wrapperString(key,tagName,tag.description)
 }
 function wrapperString(key: string | number, tagName: string, tag: string) {
     return (
