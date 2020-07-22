@@ -5,8 +5,9 @@ import './FloatButton.css'
 export interface FloatButtonProps extends BaseComponentProps {
     eleFloatOn: JSX.Element
     children: React.ReactElement
+    opacity:boolean
 }
-export default function FloatButton({ children, eleFloatOn }: FloatButtonProps) {
+export default function FloatButton({ children, eleFloatOn,opacity }: FloatButtonProps) {
     const [buttonOpacity, setOpacity] = useState<number>(0.3)
     const [showChildren, setShowChildren] = useState<boolean>(false)
     const [top, setTop] = useState<number>(0)
@@ -42,7 +43,7 @@ export default function FloatButton({ children, eleFloatOn }: FloatButtonProps) 
             />
             <div 
             className='popper opacity-trans' style={styles.popper} {...attributes.popper} 
-            ref={childRef} data-show={showChildren} onClick={(e)=>{e.stopPropagation()}}>
+            ref={childRef} data-show={showChildren && opacity} onClick={(e)=>{e.stopPropagation()}}>
                 <div ref={arrow} />
                 {children}
             </div>

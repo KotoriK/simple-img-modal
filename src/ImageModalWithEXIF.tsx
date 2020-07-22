@@ -14,7 +14,7 @@ export function ImageModalWithEXIF({ imgSrc, handleOpacityChange, opacity }: Ima
     return (<Modal opacity={newOpacity}
         handleOpacityChange={() => handleOpacityChange(false, imgSrc)}>
         <FloatButton key={key} eleFloatOn={
-            <ImageView src={imgSrc} width='100%' height='100%' opacity={newOpacity}/>}>
+            <ImageView src={imgSrc} width='100%' height='100%' opacity={newOpacity}/>} opacity={newOpacity}>
             <MetaPannel imgSrc={imgSrc} />
         </FloatButton>
     </Modal>

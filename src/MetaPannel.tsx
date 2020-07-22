@@ -66,6 +66,7 @@ export default function MetaPannel(props: MetaPannelProps) {
         }, [props.imgSrc])
         useEffect(() => {
             if (imgExifs) {
+                console.log(imgExifs)
                 let newPropLabels: Array<JSX.Element>, tryGPS: boolean = false
                 if (props.showAll || !props.interests) {
                     tryGPS = true
