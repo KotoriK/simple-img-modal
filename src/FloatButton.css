@@ -12,20 +12,22 @@
 .popper {
     opacity: 0;
     visibility: hidden;
-    background: #333;
+    background: #33333380;
     color: white;
     padding: 4px 8px;
     font-size: 13px;
     border-radius: 4px;
-    max-height:20vh;
+    max-height: 20vh;
     overflow: auto;
 }
 
 .popper[data-show="true"] {
-opacity: 1;
-visibility: visible;
+    opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(3px);
 }
-.opacity-trans{
-        transition: opacity 500ms ease-in-out;
+
+.opacity-trans {
+    transition: opacity 500ms ease-in-out;
 
 }

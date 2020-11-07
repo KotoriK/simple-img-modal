@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import LazyLoad, { LazyLoadProps } from './LazyLoad';
 export interface ImageViewProps extends LazyLoadProps {
     src: string
@@ -12,12 +12,13 @@ export interface ImageViewProps extends LazyLoadProps {
  * @param props
  * @returns
  */
-export default function ImageView(props: ImageViewProps) {
+const ImageView = forwardRef<HTMLImageElement, ImageViewProps>(function ImageView(props, ref) {
     return (
         <LazyLoad {...props}>
-            <img ref={props.refForward}
+            <img ref={ref}
                 src={props.src}
                 referrerPolicy={props.refererPolicy} alt={props.alt}
             />
         </LazyLoad>)
-}
+})
+export default ImageView

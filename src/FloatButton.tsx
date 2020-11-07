@@ -5,9 +5,9 @@ import './FloatButton.css'
 export interface FloatButtonProps extends BaseComponentProps {
     eleFloatOn: JSX.Element
     children: React.ReactElement
-    opacity:boolean
+    opacity: boolean
 }
-export default function FloatButton({ children, eleFloatOn,opacity }: FloatButtonProps) {
+export default function FloatButton({ children, eleFloatOn, opacity }: FloatButtonProps) {
     const [buttonOpacity, setOpacity] = useState<number>(0.3)
     const [showChildren, setShowChildren] = useState<boolean>(false)
     const [top, setTop] = useState<number>(0)
@@ -21,13 +21,13 @@ export default function FloatButton({ children, eleFloatOn,opacity }: FloatButto
     const refresh = () => {
         const ele = refFloat.current, computedLeft = ele.offsetLeft + ele.offsetWidth, innerWidth = document.body.clientWidth
         setTop(ele.offsetTop)
-        setLeft((computedLeft > innerWidth ? (innerWidth-10) : computedLeft) - 30)
+        setLeft((computedLeft > innerWidth ? (innerWidth - 10) : computedLeft) - 30)
     }
-    useEffect(refresh)
+    useEffect(refresh,[])
     return (
         <>
             {cloneElement(eleFloatOn, {
-                refForward: refFloat, onRendered: refresh
+                ref: refFloat, onRendered: refresh
             })}
             <div ref={root} style={{ top, left, opacity: buttonOpacity }} className='btn-float opacity-trans'
                 onPointerOver={() => {
@@ -41,9 +41,8 @@ export default function FloatButton({ children, eleFloatOn,opacity }: FloatButto
                     update()
                 }}
             />
-            <div 
-            className='popper opacity-trans' style={styles.popper} {...attributes.popper} 
-            ref={childRef} data-show={showChildren && opacity} onClick={(e)=>{e.stopPropagation()}}>
+            <div className='popper opacity-trans' style={styles.popper} {...attributes.popper}
+                ref={childRef} data-show={showChildren && opacity} onClick={(e) => { e.stopPropagation() }}>
                 <div ref={arrow} />
                 {children}
             </div>

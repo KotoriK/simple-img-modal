@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import './Modal.css'
 import BaseComponentProps from "./BaseComponentProps";
 export interface ModalProps extends BaseComponentProps {
@@ -6,8 +6,9 @@ export interface ModalProps extends BaseComponentProps {
     handleOpacityChange:(newOpacity:boolean)=>void
 }
 export function Modal({children,handleOpacityChange,opacity,style}: ModalProps) {
+    const handleClick = useCallback(() => handleOpacityChange(false),[handleOpacityChange])
     return (<div
-        onClick={() => handleOpacityChange(false)}
+        onClick={handleClick}
         style={{
             opacity: opacity ? 1 : 0,
             visibility: (opacity ? 'visible' : 'hidden'),...style
