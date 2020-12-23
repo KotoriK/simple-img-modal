@@ -24,20 +24,21 @@
   },
   "homepage": "https://github.com/KotoriK/simple-img-modal#readme",
   "devDependencies": {
-    "@types/node": "^14.14.6",
-    "@types/react": "^16.9.56",
-    "@types/react-dom": "^16.9.9",
-    "parcel-bundler": "^1.12.4",
+    "@types/node": "^14.14.14",
+    "@types/react": "^16.14.2",
     "@types/react-collapse": "^5.0.0",
-    "sass": "^1.29.0",
+    "@types/react-dom": "^16.9.10",
+    "parcel-bundler": "^1.12.4",
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@popperjs/core": "^2.5.4",
-    "exifreader": "^3.12.3",
+    "@popperjs/core": "^2.6.0",
+    "exifreader": "^3.12.6",
+    "jss": "^10.5.0",
     "react": "^16.14.0",
-    "react-collapse": "^5.0.1",
+    "react-collapse": "^5.1.0",
     "react-dom": "^16.14.0",
+    "react-jss": "^10.5.0",
     "react-popper": "^2.2.4"
   },
   "sideEffects": [

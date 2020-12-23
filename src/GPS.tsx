@@ -1,7 +1,26 @@
 import React, { useState, useEffect } from "react"
 import MapModal from "./MapModal"
 import ReactDOM from "react-dom"
+import { createUseStyles } from "react-jss";
 import './Button.scss'
+const button_color_h = "219deg"
+const button_color_s = "95.5%"
+const button_color_l = "41.9%"
+const useButtonStyle = createUseStyles(() => {
+    return {
+        "btn": {
+            borderRadius: "0.2rem",
+            padding: "1px",
+            cursor: "pointer",
+            transition: " all 200ms ease-in-out",
+            textDecoration: "underline",
+            "&:hover": {
+                backgroundColor: `hsl(${button_color_h}, ${button_color_s}, ${button_color_l} + 15%)`,
+                textDecoration: "none",
+            }
+        }
+    }
+})
 export interface GPSInfo extends GPSBaseInfo {
     //ref:https://www.colorpilot.com/exiftable3.html
     altitudeRef: GPSAltitudeRef
@@ -42,19 +61,20 @@ export const GPSTagTranslate = new Map<string, string>([
 function ShowMap({ lat, lng }) {
     const [opacity, setOpacity] = useState<boolean>(false)
     useEffect(() => {
-             const node = document.createElement('div')
+        const node = document.createElement('div')
         document.body.appendChild(node)
         ReactDOM
             .render(<MapModal
-            opacity={opacity}
-            handleOpacityChange={setOpacity}
-                mapSrc={`http://api.map.baidu.com/geocoder?location=${lat},${lng}&output=html&coord_type=wgs84&src=webapp.baidu.openAPIdemo`}/>
+                opacity={opacity}
+                handleOpacityChange={setOpacity}
+                mapSrc={`http://api.map.baidu.com/geocoder?location=${lat},${lng}&output=html&coord_type=wgs84&src=webapp.baidu.openAPIdemo`} />
                 , node)
         return () => {
             ReactDOM.unmountComponentAtNode(node)
             document.body.removeChild(node)
-        }  
+        }
     })
-    return (<span className="button-map" onClick={() => {setOpacity(true) }}>显示拍摄地点</span>
+    const styles = useButtonStyle()
+    return (<span className={styles.btn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
     )
 }
