@@ -1,12 +1,10 @@
-import EXIF from 'exifreader'
+import EXIF,{load} from 'exifreader'
 import { useState, useEffect } from 'react'
 import PropLabel from './PropLabel'
 import React from 'react'
-import './MetaPannel.css'
 import { GPSInfo, translateGPSTag, GPSToReadble } from './GPS'
 import SignedCollapse from './SignedCollapse'
 import { intlDate } from './const'
-
 export const exifNameTranslateMap = new Map<string, string>([
     ['ApproximateFocusDistance', '对焦点距离'],
     ['Artist', '艺术家'],
@@ -56,9 +54,9 @@ export default function MetaPannel(props: MetaPannelProps) {
             fetch(props.imgSrc, { method: 'GET' })
                 .then(async (resp) => {
                     if (resp.ok) {
-                        setExif(EXIF.load(await resp.arrayBuffer()))
+                        setExif(load(await resp.arrayBuffer()))
                     } else {
-                        setError(error2Descr({ message: 'HTTP '+resp.status, name: "HTTP" }))
+                        setError(error2Descr({ message: 'HTTP ' + resp.status, name: "HTTP" }))
                     }
                 })
                 .catch((reason) => {
@@ -109,8 +107,6 @@ export default function MetaPannel(props: MetaPannelProps) {
                         const _time = [year, month - 1, day, hour + hour_offset, minute + minute_offset, second]
                         //@ts-ignore
                         newPropLabels.unshift(_offset ? wrapperString('dt', '拍摄时间（你的本地时区）', intlDate.format(new Date(Date.UTC(..._time)))) : wrapperString('dt', '拍摄时间（时区未知）', new Date(..._time).toLocaleString()))
-
-
                     }
                 }
                 setPropLabels(newPropLabels)
