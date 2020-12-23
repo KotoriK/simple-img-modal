@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import MapModal from "./MapModal"
-import ReactDOM from "react-dom"
+import { createPortal } from "react-dom"
 import { createUseStyles } from "react-jss";
-import './Button.scss'
 const button_color_h = "219deg"
 const button_color_s = "95.5%"
 const button_color_l = "41.9%"
@@ -50,31 +49,21 @@ export function GPSToReadble(info: GPSInfo): GPSReadableInfo {
         speed: `${info.speed} ${info.speedRef}`
     }
 }
-export function translateGPSTag(obj: GPSReadableInfo) {
-    return Object.fromEntries(Object.entries(obj).map(([key, value]) => {
-        return [GPSTagTranslate.get(key), value]
-    }))
-}
-export const GPSTagTranslate = new Map<string, string>([
-    ['altitude', '高度'], ['latitude', '纬度'], ['longitude', '经度'], ['speed', '速度'], ['map', '地图']
-])
+export const translateGPSTag = (obj: GPSReadableInfo) =>
+    Object.fromEntries(Object.entries(obj).map(([key, value]) => [GPSTagTranslate[key] ?? key, value]))
+
+export const GPSTagTranslate = { altitude: "高度", latitude: "纬度", longitude: "经度", speed: "速度", map: "地图" }
 function ShowMap({ lat, lng }) {
     const [opacity, setOpacity] = useState<boolean>(false)
-    useEffect(() => {
-        const node = document.createElement('div')
-        document.body.appendChild(node)
-        ReactDOM
-            .render(<MapModal
-                opacity={opacity}
-                handleOpacityChange={setOpacity}
-                mapSrc={`http://api.map.baidu.com/geocoder?location=${lat},${lng}&output=html&coord_type=wgs84&src=webapp.baidu.openAPIdemo`} />
-                , node)
-        return () => {
-            ReactDOM.unmountComponentAtNode(node)
-            document.body.removeChild(node)
-        }
-    })
     const styles = useButtonStyle()
-    return (<span className={styles.btn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
+    return (<>
+    <span className={styles.btn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
+        {createPortal(
+        <MapModal
+            opacity={opacity}
+            handleOpacityChange={setOpacity}
+            mapSrc={`http://api.map.baidu.com/geocoder?location=${lat},${lng}&output=html&coord_type=wgs84&src=webapp.baidu.openAPIdemo`} />
+            , document.body)}
+    </>
     )
 }

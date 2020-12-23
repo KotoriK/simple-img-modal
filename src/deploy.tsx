@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom'
+import { render, unmountComponentAtNode } from 'react-dom'
 import  { ComponentClass, FunctionComponent, createElement } from 'react'
 import {  ImageModalProps } from './ImageModal'
 var container: HTMLElement
@@ -12,7 +12,7 @@ const regex = /(http[\S]+) ([0-9]+)w/i
  * @export
  * @param {NodeListOf<HTMLElement>} nodeList
  */
-export function _attachListeners(nodeList: NodeListOf<HTMLElement>) {
+export function attachListeners(nodeList: NodeListOf<HTMLElement>) {
     nodeList.forEach((ele) => {
         ele.addEventListener('click', clickHandler)
     })
@@ -24,8 +24,7 @@ export function _attachListeners(nodeList: NodeListOf<HTMLElement>) {
  * @export
  * @param {NodeListOf<HTMLElement>} nodeList
  */
-export function _removeListeners(nodeList: NodeListOf<HTMLElement>) {
-
+export function removeListeners(nodeList: NodeListOf<HTMLElement>) {
     nodeList.forEach((ele) => {
         ele.removeEventListener('click', clickHandler)
     })
@@ -66,7 +65,7 @@ export function showModal(imgSrc?: string) {
     _updateModal(true, imgSrc)
 }
 function _updateModal(opacity: boolean, imgSrc?: string) {
-    ReactDOM.render(createElement(usingModal, {
+    render(createElement(usingModal, {
         imgSrc, opacity,
         handleOpacityChange: _updateModal
     }), container)
@@ -78,7 +77,7 @@ function _updateModal(opacity: boolean, imgSrc?: string) {
  * @export
  */
 export function hideModal() {
-    ReactDOM.unmountComponentAtNode(container)
+    unmountComponentAtNode(container)
 }
 export function setContainer(newContainer: HTMLElement) {
     container = newContainer
