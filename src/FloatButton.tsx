@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import BaseComponentProps from "./BaseComponentProps";
 import { usePopper } from 'react-popper'
 import { createUseStyles } from "react-jss";
@@ -51,13 +51,13 @@ export default function FloatButton({ children, eleFloatOn, opacity }: FloatButt
     const { styles, attributes, update } = usePopper(root.current, childRef.current,
         { placement: 'bottom', modifiers: [{ name: 'arrow', options: { element: arrow.current } }] })
     const refFloat = useRef<HTMLElement>()
-    const refresh = () => {
+    const refresh = useCallback(() => {
         const ele = refFloat.current,
             computedLeft = ele.offsetLeft + ele.offsetWidth,
             innerWidth = document.body.clientWidth
         setTop(ele.offsetTop)
         setLeft((computedLeft > innerWidth ? (innerWidth - 10) : computedLeft) - 30)
-    }
+    },[])
     const cssStyles = useFloatBtn()
     useEffect(refresh, [])
     return (
