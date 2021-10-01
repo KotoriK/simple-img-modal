@@ -1,23 +1,20 @@
 import React, { useState } from "react"
 import MapModal from "./MapModal"
 import { createPortal } from "react-dom"
-import { createUseStyles } from "react-jss";
+import { css } from "@emotion/css"
 const button_color_h = "219deg"
 const button_color_s = "95.5%"
 const button_color_l = "41.9%"
-const useButtonStyle = createUseStyles(() => {
-    return {
-        "btn": {
-            borderRadius: "0.2rem",
-            padding: "1px",
-            cursor: "pointer",
-            transition: " all 200ms ease-in-out",
-            textDecoration: "underline",
-            "&:hover": {
-                backgroundColor: `hsl(${button_color_h}, ${button_color_s}, ${button_color_l} + 15%)`,
-                textDecoration: "none",
-            }
-        }
+
+const styleBtn = css({
+    borderRadius: "0.2rem",
+    padding: "1px",
+    cursor: "pointer",
+    transition: " all 200ms ease-in-out",
+    textDecoration: "underline",
+    "&:hover": {
+        backgroundColor: `hsl(${button_color_h}, ${button_color_s}, ${button_color_l} + 15%)`,
+        textDecoration: "none",
     }
 })
 export interface GPSInfo extends GPSBaseInfo {
@@ -55,9 +52,8 @@ export const translateGPSTag = (obj: GPSReadableInfo) =>
 export const GPSTagTranslate = { altitude: "高度", latitude: "纬度", longitude: "经度", speed: "速度", map: "地图" }
 function ShowMap({ lat, lng }) {
     const [opacity, setOpacity] = useState<boolean>(false)
-    const styles = useButtonStyle()
     return (<>
-    <span className={styles.btn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
+    <span className={styleBtn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
         {createPortal(
         <MapModal
             opacity={opacity}
