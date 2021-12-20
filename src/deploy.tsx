@@ -1,8 +1,8 @@
 import { render, unmountComponentAtNode } from 'react-dom'
-import  { ComponentClass, FunctionComponent, createElement } from 'react'
-import {  ImageModalProps } from './ImageModal'
+import { ComponentClass, FunctionComponent, createElement } from 'react'
+import { ImageModalProps } from './ImageModalProp'
 var container: HTMLElement
-var usingModal: ComponentClass<ImageModalProps> | FunctionComponent<ImageModalProps> 
+var usingModal: ComponentClass<ImageModalProps> | FunctionComponent<ImageModalProps>
 const regex = /(http[\S]+) ([0-9]+)w/i
 
 /**
@@ -64,10 +64,11 @@ export function clickHandler(e: Event) {
 export function showModal(imgSrc?: string) {
     _updateModal(true, imgSrc)
 }
-function _updateModal(opacity: boolean, imgSrc?: string) {
+function _updateModal(show: boolean, src?: string) {
     render(createElement(usingModal, {
-        imgSrc, opacity,
-        handleOpacityChange: _updateModal
+        src,
+        open: show,
+        onClose: () => _updateModal(false,src)
     }), container)
 }
 /**
@@ -82,6 +83,6 @@ export function hideModal() {
 export function setContainer(newContainer: HTMLElement) {
     container = newContainer
 }
-export function setImageModal(usingImageModal:  ComponentClass<ImageModalProps> | FunctionComponent<ImageModalProps>) {
+export function setImageModal(usingImageModal: ComponentClass<ImageModalProps> | FunctionComponent<ImageModalProps>) {
     usingModal = usingImageModal
 }

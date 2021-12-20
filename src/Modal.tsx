@@ -1,6 +1,7 @@
 import { css } from "@emotion/css";
-import React, { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BaseComponentProps from "./BaseComponentProps";
+import { useTimeout } from "./utils";
 
 const styleModal = css({
     /*CSS contributor 
@@ -27,16 +28,28 @@ const styleModal = css({
     }
 })
 export interface ModalProps extends BaseComponentProps {
-    opacity: boolean
-    handleOpacityChange: (newOpacity: boolean) => void
+    open: boolean
+    onClose: () => void
+    delay?: number
 }
-export function Modal({ children, handleOpacityChange, opacity, style }: ModalProps) {
-    const handleClick = useCallback(() => handleOpacityChange(false), [handleOpacityChange])
+export function Modal({ children, onClose, open, style, delay = 500 }: ModalProps) {
+    const [setTimeout] = useTimeout()
+    const [visibility, setVisibility] = useState(open)
+    useEffect(() => {
+        if (visibility !== open) {
+            if (open) {
+                setVisibility(true)
+            } else {
+                setTimeout(() => setVisibility(false), delay)
+            }
+        }
+    }, [open])
     return (<div
-        onClick={handleClick}
+        onClick={onClose}
         style={{
-            opacity: opacity ? 1 : 0,
-            visibility: (opacity ? 'visible' : 'hidden'), ...style
+            opacity: open ? 1 : 0,
+            visibility: (visibility ? 'visible' : 'hidden'),
+            ...style
         }}
         className={styleModal}>
         <div>

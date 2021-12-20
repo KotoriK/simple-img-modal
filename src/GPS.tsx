@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import MapModal from "./MapModal"
 import { createPortal } from "react-dom"
 import { css } from "@emotion/css"
@@ -42,7 +42,7 @@ export function GPSToReadble(info: GPSInfo): GPSReadableInfo {
         altitude: '海拔' + (info.altitudeRef == 0 ? '' : '-') + info.altitude,
         latitude: (info.latitudeRef == 'N' ? '北纬' : '南纬') + info.latitude,
         longitude: (info.longitudeRef == 'W' ? '西经' : '东经') + info.longitude,
-        map: (<ShowMap lat={info.latitude} lng={info.longitude} />),
+        map: (<BaiduMap lat={info.latitude} lng={info.longitude} />),
         speed: `${info.speed} ${info.speedRef}`
     }
 }
@@ -50,15 +50,15 @@ export const translateGPSTag = (obj: GPSReadableInfo) =>
     Object.fromEntries(Object.entries(obj).map(([key, value]) => [GPSTagTranslate[key] ?? key, value]))
 
 export const GPSTagTranslate = { altitude: "高度", latitude: "纬度", longitude: "经度", speed: "速度", map: "地图" }
-function ShowMap({ lat, lng }) {
+function BaiduMap({ lat, lng }) {
     const [opacity, setOpacity] = useState<boolean>(false)
     return (<>
-    <span className={styleBtn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
+        <span className={styleBtn} onClick={() => { setOpacity(true) }}>显示拍摄地点</span>
         {createPortal(
-        <MapModal
-            opacity={opacity}
-            handleOpacityChange={setOpacity}
-            mapSrc={`http://api.map.baidu.com/geocoder?location=${lat},${lng}&output=html&coord_type=wgs84&src=webapp.baidu.openAPIdemo`} />
+            <MapModal
+                open={opacity}
+                onClose={() => setOpacity(false)}
+                mapSrc={`http://api.map.baidu.com/geocoder?location=${lat},${lng}&output=html&coord_type=wgs84&src=webapp.baidu.openAPIdemo`} />
             , document.body)}
     </>
     )

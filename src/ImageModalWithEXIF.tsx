@@ -1,21 +1,20 @@
-import React from "react";
+
 import ImageView from "./ImageView";
 import MetaPannel from "./MetaPannel";
 import FloatButton from "./FloatButton";
-import { Modal, ModalProps } from "./Modal";
-export interface ImageModalProps extends ModalProps {
-    imgSrc?: string,
-    handleOpacityChange: (newOpacity: boolean, imgSrc?: string) => void
-}
+import { Modal } from "./Modal";
+import { ImageModalProps } from "./ImageModalProp";
 
-export function ImageModalWithEXIF({ imgSrc, handleOpacityChange, opacity }: ImageModalProps) {
-    const newOpacity = imgSrc && opacity
-    const key = imgSrc ? (imgSrc.split('/').pop()) : '#'
-    return (<Modal opacity={newOpacity}
-        handleOpacityChange={() => handleOpacityChange(false, imgSrc)}>
-        <FloatButton key={key} eleFloatOn={(ref,onRendered)=>
-            <ImageView ref={ref as any} onRendered={onRendered} src={imgSrc} width='100%' height='100%' opacity={newOpacity}/>} opacity={newOpacity}>
-            <MetaPannel imgSrc={imgSrc} />
+
+export function ImageModalWithEXIF({ src, onClose, open: opacity }: ImageModalProps) {
+    const newOpacity = src && opacity
+    const key = src ? (src.split('/').pop()) : '#'
+    return (<Modal open={newOpacity}
+        onClose={onClose}>
+        <FloatButton key={key} eleFloatOn={(ref, onRendered) =>
+            <ImageView ref={ref as any} onRendered={onRendered} src={src} width='100%' height='100%' opacity={newOpacity} />}
+            open={newOpacity}>
+            <MetaPannel imgSrc={src} />
         </FloatButton>
     </Modal>
     )

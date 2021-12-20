@@ -1,7 +1,6 @@
-import EXIF,{load} from 'exifreader'
+import EXIF, { load } from 'exifreader'
 import { useState, useEffect } from 'react'
 import PropLabel from './PropLabel'
-import React from 'react'
 import { GPSInfo, translateGPSTag, GPSToReadble } from './GPS'
 import SignedCollapse from './SignedCollapse'
 import { intlDate } from './const'

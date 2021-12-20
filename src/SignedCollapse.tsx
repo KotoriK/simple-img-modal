@@ -1,5 +1,5 @@
 import { UnmountClosed } from 'react-collapse';
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { WrapperFunc } from './MetaPannel';
 import { css } from '@emotion/css';
 

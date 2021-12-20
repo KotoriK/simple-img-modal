@@ -1,11 +1,14 @@
 import BaseComponentProps from './BaseComponentProps';
-import React, { useState, useEffect, cloneElement, Children, CSSProperties } from 'react';
+import { useState, useEffect, cloneElement, Children, CSSProperties } from 'react';
 import Indicator, { IndicatorProps, IndicateLevel } from './Indicator';
 export interface LazyLoadProps extends BaseComponentProps {
     width?: string
     height?: string
+    /**
+     * 当lazyload内的元素有变化时触发
+     */
     onRendered?: () => void
-    opacity: boolean
+    opacity?: boolean
 }
 /**
  * 显示图片
@@ -14,28 +17,24 @@ export interface LazyLoadProps extends BaseComponentProps {
  * @param props
  * @returns
  */
-export default function LazyLoad({ children, refForward, className, style, onRendered, opacity }: LazyLoadProps) {
+export default function LazyLoad({ children, refForward, className, style, onRendered }: LazyLoadProps) {
     const [showIndicator, setShowIndicator] = useState({ level: IndicateLevel.PRELOAD } as IndicatorProps)
-    const [loaded, setLoaded] = useState<boolean>(false)
-    const nextOpacity = opacity && loaded
-    useEffect(onRendered || (() => { }))
+    useEffect(onRendered || (() => { }), [showIndicator])
     return (
         <>
             {showIndicator && <Indicator {...showIndicator} style={{ ...style, transition: "opacity 2s ease" }} className={className} />}
-            {Children.map(children, (child) => {
-                return cloneElement(child, {
+            {Children.map(children, (child) =>
+                cloneElement(child, {
                     ref: refForward,
-                    style: { ...child.props.style, visibility: nextOpacity ? 'visible' : 'hidden', opacity: nextOpacity ? 1 : 0 } as CSSProperties,
+                    style: child.props.style,
                     onLoad: () => {
                         setShowIndicator(null)
-                        setLoaded(true)
                     },
                     onError: () => {
                         setShowIndicator({ level: IndicateLevel.ERROR })
-                        setLoaded(false)
                     }
                 })
-            })}
+            )}
         </>
     )
 }
