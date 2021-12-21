@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BaseComponentProps from "./BaseComponentProps";
 import { useTimeout } from "./utils";
 

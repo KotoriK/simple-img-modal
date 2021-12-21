@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle, Ref, MutableRefObject } from "react";
 import BaseComponentProps from "./BaseComponentProps";
 import { usePopper } from 'react-popper'
 import { css } from "@emotion/css";
@@ -9,7 +9,6 @@ const cssStyles = {
         width: "30px",
         height: "30px",
         zIndex: 9999,
-        transition: "all 500ms ease-in-out",
     }),
     "icon": css({
         fill: "white"
@@ -36,39 +35,46 @@ const cssStyles = {
         transition: "opacity 500ms ease-in-out",
     }),
 }
-
 export interface FloatButtonProps extends BaseComponentProps {
-    eleFloatOn: (ref: React.MutableRefObject<HTMLElement>, onRendered: () => void) => JSX.Element
     children: React.ReactElement
     open: boolean
+    refFloat: MutableRefObject<HTMLElement>
 }
-export default function FloatButton({ children, eleFloatOn, open }: FloatButtonProps) {
-    const [buttonOpacity, setOpacity] = useState<number>(0.3)
-    const [showChildren, setShowChildren] = useState<boolean>(false)
-    const [top, setTop] = useState<number>(0)
-    const [left, setLeft] = useState<number>(0)
-    const root = useRef()
-    const childRef = useRef()
-    const arrow = useRef()
-    const { styles, attributes, update } = usePopper(root.current, childRef.current,
-        { placement: 'bottom', modifiers: [{ name: 'arrow', options: { element: arrow.current } }] })
-    const refFloat = useRef<HTMLElement>()
-    const refresh = useCallback(() => {
-        const ele = refFloat.current;
-        const { y, width, } = ele.getBoundingClientRect()
-        const computedLeft = width - 20;
-        setTop(y)
-        setLeft(computedLeft)
-    }, [])
-    useEffect(refresh, [])
-    return (
-        <>
-            {eleFloatOn(refFloat, ()=>{refresh();setShowChildren(false)})}
-            <div ref={root} style={{ top, left, opacity: buttonOpacity }}
-                className={cssStyles['btn-float']}
+const FloatButton = forwardRef(
+    function FloatButton({ children, open, refFloat }: FloatButtonProps, ref) {
+        const [buttonOpacity, setOpacity] = useState<number>(0.3)
+        const [showChildren, setShowChildren] = useState<boolean>(false)
+        const [top, setTop] = useState<number>(0)
+        const [left, setLeft] = useState<number>(0)
+
+        const root = useRef()
+        const childRef = useRef()
+        const arrow = useRef()
+
+        const { styles, attributes, update } = usePopper(root.current, childRef.current,
+            { placement: 'bottom', modifiers: [{ name: 'arrow', options: { element: arrow.current } }] })
+        const refresh = useCallback(() => {
+            const ele = refFloat.current;
+            const { y, width, } = ele.getBoundingClientRect()
+            const computedLeft = width - 20;
+            setTop(y)
+            setLeft(computedLeft)
+        }, [])
+        useEffect(refresh, [])
+        useImperativeHandle(ref, () => ({
+            refresh: () => {
+                refresh();
+                setShowChildren(false)
+            },
+        }))
+        return (<>
+            <div ref={root}
+                style={{ top, left, opacity: buttonOpacity }}
+                className={cssStyles['btn-float'] + ' ' + cssStyles['opacity-trans']}
                 onPointerOver={() => {
                     setOpacity(1)
-                }} onPointerOut={() => {
+                }}
+                onPointerOut={() => {
                     if (!showChildren) setOpacity(0.3)
                 }}
                 onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -76,15 +82,15 @@ export default function FloatButton({ children, eleFloatOn, open }: FloatButtonP
                     setShowChildren(!showChildren)
                     update()
                 }}
-            />
-            <div className={cssStyles['popper'] + ' ' + cssStyles['opacity-trans']}
+            />            <div className={cssStyles['popper'] + ' ' + cssStyles['opacity-trans']}
                 style={styles.popper} {...attributes.popper}
                 ref={childRef}
                 data-show={showChildren && open}
-                onClick={(e) => { e.stopPropagation() }}>
+                onClick={(e) => { e.stopPropagation() }}
+            >
                 <div ref={arrow} />
                 {children}
-            </div>
-        </>
-    )
-}
+            </div></>
+        )
+    })
+export default FloatButton

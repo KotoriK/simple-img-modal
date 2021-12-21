@@ -1,6 +1,6 @@
 import { Modal, ModalProps } from "./Modal";
 import LazyLoad from "./LazyLoad";
-import { css, cx } from "@emotion/css";
+import { css } from "@emotion/css";
 export interface MapModalProps extends ModalProps {
     mapSrc: string
 }

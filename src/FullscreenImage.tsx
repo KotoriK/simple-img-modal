@@ -1,5 +1,5 @@
 import debounce from "@mui/utils/debounce"
-import { useRef, useState, CSSProperties, useCallback, useEffect, ImgHTMLAttributes, forwardRef } from "react"
+import { useRef, useState, CSSProperties, useCallback, useEffect, ImgHTMLAttributes, forwardRef, Children, MutableRefObject } from "react"
 import { useTimeout } from "./utils"
 import { awaitImage } from 'await-res'
 import { Modal } from "./Modal"
@@ -11,14 +11,13 @@ const styleTransition = css({
 })
 export interface FullscreenImageProp extends ImgHTMLAttributes<HTMLImageElement> {
     img: HTMLImageElement
-    onRendered?: () => void
 }
 const lockBody = (lock: boolean) => {
     document.documentElement.style.overflow = lock ? 'hidden' : ''
 }
 
 const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
-    function FullscreenImage({ className, style, img, onRendered, ...prop }: FullscreenImageProp, refForward) {
+    function FullscreenImage({ className, style, img, children, ...prop }: FullscreenImageProp, refForward) {
 
         const [fullscreen, setFullscreen] = useState(false)
 
@@ -99,7 +98,11 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
             }
         }, [img])
         return <Modal open={fullscreen} onClose={() => { setFullscreen(false) }}>
-            <img ref={refForward} style={{ ...stillStyle, ...showImage ? endStyle : startStyle }} className={styleTransition} {...prop} onTransitionEnd={onRendered} />
+            <img
+                ref={refForward}
+                style={{ ...stillStyle, ...showImage ? endStyle : startStyle }}
+                className={styleTransition} {...prop} />
+            {children}
         </Modal>
     })
 export default FullscreenImage

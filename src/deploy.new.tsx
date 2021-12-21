@@ -2,6 +2,7 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import FullscreenImage from './FullscreenImage'
 import FloatButton from './FloatButton'
 import MetaPannel from './MetaPannel'
+import { useRef } from 'react'
 var container: HTMLElement
 const regex = /(http[\S]+) ([0-9]+)w/i
 
@@ -29,7 +30,6 @@ export function getSrc(img: HTMLImageElement) {
 
 function clickHandler(e: Event) {
     const img = e.target as HTMLImageElement
-    showModal(img)
     if (!lastImg) {
         showModal(img)
 
@@ -39,17 +39,34 @@ function clickHandler(e: Event) {
     }
     lastImg = img
 }
-export function showModal(img?: HTMLImageElement) {
-
-    const src = getSrc(img)
-    render(<FloatButton eleFloatOn={(ref, onRendered) => <FullscreenImage ref={ref as any}
+const FIModal = ({ img, src }) => {
+    const refFloat = useRef()
+    const refBtn = useRef<any>()
+    return <FullscreenImage
+        ref={refFloat}
         img={img}
         src={src}
-        onRendered={onRendered} />}
-        open={true}
+        onTransitionEnd={() => {
+            const func = refBtn.current?.refresh
+            if (func) {
+                func()
+                console.log('!')
+            }
+
+        }}
     >
-        <MetaPannel imgSrc={src} />
-    </FloatButton>, container)
+        <FloatButton
+            open={true}
+            refFloat={refFloat}
+            ref={refBtn}
+        >
+            <MetaPannel imgSrc={src} />
+        </FloatButton>
+    </FullscreenImage>
+}
+export function showModal(img?: HTMLImageElement) {
+    const src = getSrc(img)
+    render(<FIModal img={img} src={src} />, container)
 }
 /**
  * Attach 'clickHandler' for each element in nodeList

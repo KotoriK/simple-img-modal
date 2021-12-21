@@ -1,4 +1,3 @@
-import React from 'react';
 import BaseComponentProps from './BaseComponentProps';
 const SVG_PRELOAD = "https://cdn.jsdelivr.net/gh/YukiCat-Dev/FacePack/static/Ripple-1.3s-237px.svg"
 /* const SVG_WARNING = "https://cdn.jsdelivr.net/gh/YukiCat-Dev/FacePack/static/warning.svg"

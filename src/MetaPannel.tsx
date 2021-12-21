@@ -48,9 +48,14 @@ export default function MetaPannel(props: MetaPannelProps) {
     const [propLabels, setPropLabels] = useState<Array<JSX.Element>>([])
     const [error, setError] = useState<JSX.Element>()
     const [imgExifs, setExif] = useState<EXIF.Tags & EXIF.XmpTags & EXIF.IccTags>()
-    if (props.imgSrc) {
-        useEffect(() => {
-            fetch(props.imgSrc, { method: 'GET' })
+    useEffect(() => {
+        if (props.imgSrc) {
+            const controller = new AbortController();
+
+            fetch(props.imgSrc, {
+                method: 'GET',
+                signal: controller.signal
+            })
                 .then(async (resp) => {
                     if (resp.ok) {
                         setExif(load(await resp.arrayBuffer()))
@@ -61,73 +66,74 @@ export default function MetaPannel(props: MetaPannelProps) {
                 .catch((reason) => {
                     setError(error2Descr(reason))
                 })
-        }, [props.imgSrc])
-        useEffect(() => {
-            if (imgExifs) {
-                console.log(imgExifs)
-                let newPropLabels: Array<JSX.Element>, tryGPS = false, tryDateTime = false
-                if (props.showAll || !props.interests) {
-                    tryGPS = true
-                    tryDateTime = true
-                    newPropLabels =
-                        Array.from(exifNameTranslateMap.keys()).map((key, index) => {
+            return () => {
+                controller.abort()
+            }
+        }
+    }, [props.imgSrc])
+    useEffect(() => {
+        if (imgExifs) {
+            console.log(imgExifs)
+            let newPropLabels: Array<JSX.Element>, tryGPS = false, tryDateTime = false
+            if (props.showAll || !props.interests) {
+                tryGPS = true
+                tryDateTime = true
+                newPropLabels =
+                    Array.from(exifNameTranslateMap.keys())
+                        .map((key, index) => {
                             const value = imgExifs[key]
                             if (value) return wrapper(index, key, value)
                         })
-                } else {
-                    newPropLabels =
-                        props.interests.map((interest, index) => {
-                            if (interest === 'GPS') { tryGPS = interest === 'GPS'; return }
-                            if (interest === 'DateTime') { tryDateTime = interest === 'DateTime'; return }
-                            const value = imgExifs[interest]
-                            if (value) return wrapper(index, interest, value)
-                        })
-                }
-                if (tryGPS) {
-                    const GPSInfo = getGPSInfo(imgExifs)
-                    if (GPSInfo) newPropLabels.push(
-                        wrapperCollapse(newPropLabels.length, 'GPS',
-                            translateGPSTag(GPSToReadble(GPSInfo))))
-                }
-                if (tryDateTime) {
-                    const date = imgExifs.DateTimeDigitized?.description.match(/([0-9]{4}):([0-9]{2}):([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/),
-                        _offset = imgExifs['OffsetTimeDigitized']?.description
-                    if (date) {
-                        let hour_offset: number = 0, minute_offset: number = 0
-                        const [year, month, day, hour, minute, second] = date.slice(1).map(value => parseInt(value))
-                        if (_offset) {
-                            const offset = _offset.match(/([+-])([0-9]{2}):([0-9]{2})/)
-                            const [_offset_type, _hour_offset, _minute_offset] = offset.slice(1)
-                            const offset_type = _offset_type === '+' ? '-' : '+'
-                            hour_offset = parseInt(`${offset_type}${_hour_offset}`)
-                            minute_offset = parseInt(`${offset_type}${_minute_offset}`)
-                            newPropLabels.unshift(wrapperString('dttz', '拍摄者所在时区', _offset))
-                        }
-                        const _time = [year, month - 1, day, hour + hour_offset, minute + minute_offset, second]
-                        //@ts-ignore
-                        newPropLabels.unshift(_offset ? wrapperString('dt', '拍摄时间（你的本地时区）', intlDate.format(new Date(Date.UTC(..._time)))) : wrapperString('dt', '拍摄时间（时区未知）', new Date(..._time).toLocaleString()))
-                    }
-                }
-                setPropLabels(newPropLabels)
+            } else {
+                newPropLabels =
+                    props.interests.map((interest, index) => {
+                        if (interest === 'GPS') { tryGPS = interest === 'GPS'; return }
+                        if (interest === 'DateTime') { tryDateTime = interest === 'DateTime'; return }
+                        const value = imgExifs[interest]
+                        if (value) return wrapper(index, interest, value)
+                    })
             }
-        }, [props.interests, imgExifs])
-        return (<>
-            {(propLabels.length > 0) ? propLabels : (error || <span>正在加载EXIF信息...</span>)}
-        </>)
-    } else {
-        return (<></>)//跳过渲染
-    }
+            if (tryGPS) {
+                const GPSInfo = getGPSInfo(imgExifs)
+                if (GPSInfo) newPropLabels.push(
+                    wrapperCollapse(newPropLabels.length, 'GPS',
+                        translateGPSTag(GPSToReadble(GPSInfo))))
+            }
+            if (tryDateTime) {
+                const date = imgExifs.DateTimeDigitized?.description.match(/([0-9]{4}):([0-9]{2}):([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})/),
+                    _offset = imgExifs['OffsetTimeDigitized']?.description
+                if (date) {
+                    let hour_offset: number = 0, minute_offset: number = 0
+                    const [year, month, day, hour, minute, second] = date.slice(1).map(value => parseInt(value))
+                    if (_offset) {
+                        const offset = _offset.match(/([+-])([0-9]{2}):([0-9]{2})/)
+                        const [_offset_type, _hour_offset, _minute_offset] = offset.slice(1)
+                        const offset_type = _offset_type === '+' ? '-' : '+'
+                        hour_offset = parseInt(`${offset_type}${_hour_offset}`)
+                        minute_offset = parseInt(`${offset_type}${_minute_offset}`)
+                        newPropLabels.unshift(wrapperString('dttz', '拍摄者所在时区', _offset))
+                    }
+                    const _time = [year, month - 1, day, hour + hour_offset, minute + minute_offset, second]
+                    //@ts-ignore
+                    newPropLabels.unshift(_offset ? wrapperString('dt', '拍摄时间（你的本地时区）', intlDate.format(new Date(Date.UTC(..._time)))) : wrapperString('dt', '拍摄时间（时区未知）', new Date(..._time).toLocaleString()))
+                }
+            }
+            setPropLabels(newPropLabels)
+        }
+    }, [props.interests, imgExifs])
+    return (<>
+        {props.imgSrc ? (propLabels.length > 0) ? propLabels : (error || <span>正在加载EXIF信息...</span>) : undefined}
+    </>)
+
 }
 
 function getCaption(propName: string) {
     const translate = exifNameTranslateMap.get(propName)
     return translate || propName
 }
-function _error2Descr(prefix: string, desc: string) {
-    return <PropLabel caption={prefix} value={desc}></PropLabel>
-}
 function error2Descr(e: Error | string) {
-    let prefix: string = "错误", desc: string
+    let prefix: string = "错误"
+    let desc: string
     let msg: string
     if (typeof e === 'string') {
         msg = e
@@ -135,7 +141,7 @@ function error2Descr(e: Error | string) {
         msg = e.message
         if (e.name == 'HTTP') {
             desc = msg
-            return _error2Descr(prefix, desc)
+            return <PropLabel caption={prefix} value={desc} />
         }
     }
     switch (msg) {
@@ -152,7 +158,7 @@ function error2Descr(e: Error | string) {
             console.warn(e)
             desc = '未知的错误。'
     }
-    return _error2Descr(prefix, desc)
+    return <PropLabel caption={prefix} value={desc} />
 }
 export type WrapperFunc = (key: string | number, tagName: string, tag: any) => JSX.Element
 /* function wrapper(key: string | number, tagName: string, tag: EXIF.XmpTag & EXIF.ValueTag) {
@@ -176,24 +182,24 @@ function wrapperString(key: string | number, tagName: string, tag: string) {
         </li>)
 }
 export function getGPSInfo(exif: EXIF.Tags & EXIF.XmpTags & EXIF.IccTags): GPSInfo | undefined {
-    const obj = {
-        altitude: exif.GPSAltitude ? exif.GPSAltitude.description : undefined,
-        altitudeRef: exif.GPSAltitudeRef ? exif.GPSAltitudeRef.value : undefined,
-        latitude: exif.GPSLatitude ? exif.GPSLatitude.description : undefined,
-        latitudeRef: exif.GPSLatitudeRef ? exif.GPSLatitudeRef.value[0] : undefined,
-        longitude: exif.GPSLongitude ? exif.GPSLongitude.description : undefined,
-        longitudeRef: exif.GPSLongitudeRef ? exif.GPSLongitudeRef.value[0] : undefined,
-        speed: exif.GPSSpeed ? exif.GPSSpeed.description : undefined,
-        speedRef: exif.GPSSpeedRef ? exif.GPSSpeedRef.description : undefined
+    const gpsInfo = {
+        altitude: exif.GPSAltitude?.description,
+        altitudeRef: exif.GPSAltitudeRef?.value,
+        latitude: exif.GPSLatitude?.description,
+        latitudeRef: exif.GPSLatitudeRef?.value[0],
+        longitude: exif.GPSLongitude?.description,
+        longitudeRef: exif.GPSLongitudeRef?.value[0],
+        speed: exif.GPSSpeed?.description,
+        speedRef: exif.GPSSpeedRef?.description
     }
     let isFullfied: boolean = true
-    const values = Object.values(obj).values()
+    const values = Object.values(gpsInfo).values()
     while (isFullfied) {
         const { value, done } = values.next()
         if (done) break
         isFullfied = value !== undefined
     }
-    return isFullfied ? obj : undefined
+    return isFullfied ? gpsInfo : undefined
 }
 function wrapperCollapse(key: number | string, name: string, obj: Object) {
     return (<li key={key}>
