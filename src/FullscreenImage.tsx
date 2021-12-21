@@ -1,5 +1,5 @@
 import debounce from "@mui/utils/debounce"
-import { useRef, useState, CSSProperties, useCallback, useEffect, ImgHTMLAttributes, forwardRef, } from "react"
+import { useRef, useState, CSSProperties, useEffect, ImgHTMLAttributes, forwardRef, } from "react"
 import { useTimeout } from "./utils"
 import { awaitImage } from 'await-res'
 import { Modal } from "./Modal"
@@ -26,8 +26,20 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
 
         const [setTimeout, clearAll] = useTimeout()
         const [showImage, setShowImage] = useState(false)
-        const resize = useCallback(
-            debounce(async () => {
+
+        useEffect(() => {
+            const refreshPos = () => {
+                const { x, y, height } = img.getBoundingClientRect()
+                rectHeight.current = height
+                setStartStyle({
+                    transform: `translate(${x}px,${y}px)`
+                })
+            }
+            const open = () => {
+                refreshPos()
+                setFullscreen(true)
+            }
+            const resize = debounce(async () => {
                 const height = rectHeight.current//要求与stillStyle一致
                 await awaitImage(img)
                 const { naturalWidth, naturalHeight } = img
@@ -53,46 +65,31 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
                     //`translate(${(targetWidth-width)/2+(window.innerWidth-targetWidth)/2}px,${(targetHeight-height)/2+(window.innerHeight-targetHeight)/2}px) scale(${scaleX},${scaleY})`
                     transform: `translate(${(innerWidth - width) / 2}px,${(innerHeight - height) / 2}px) scale(${scaleX},${scaleY})`
                 })
-            }), [img])
-        const refreshPos = useCallback(() => {
-            const { x, y, height } = img.getBoundingClientRect()
-            rectHeight.current = height
-            setStartStyle({
-                transform: `translate(${x}px,${y}px)`
             })
             resize()
-        }, [img])
-        useEffect(refreshPos, [className, style, img])
-
-        useEffect(() => {
-            resize()
+            refreshPos()
             window.addEventListener('resize', resize)
+            img.addEventListener('click', open)
+            setTimeout(() => setFullscreen(true),150)
             return () => {
                 window.removeEventListener('resize', resize)
+                img.removeEventListener('click', open)
+
             }
         }, [img])
 
         useEffect(() => {
             if (fullscreen) {
                 clearAll()
-                setTimeout(() => setShowImage(true), 100)
+                setTimeout(() => setShowImage(true), 60)
             } else {
                 setShowImage(false)
             }
         }, [fullscreen])
 
-        useEffect(() => {
-            const open = () => {
-                refreshPos()
-                setFullscreen(true)
-            }
-            img.addEventListener('click', open)
-            open()
-            return () => {
-                img.removeEventListener('click', open)
-            }
-        }, [img])
-        return <Modal open={fullscreen} onClose={() => { setFullscreen(false) }}>
+        return <Modal open={fullscreen} onClose={() => {
+            setFullscreen(false)
+        }}>
             <img ref={refForward}
                 style={{ ...stillStyle, ...showImage ? endStyle : startStyle }}
                 className={styleTransition} {...prop} />
