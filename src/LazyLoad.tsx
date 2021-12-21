@@ -1,5 +1,5 @@
 import BaseComponentProps from './BaseComponentProps';
-import { useState, useEffect, cloneElement, Children, CSSProperties } from 'react';
+import { useState, useEffect, cloneElement, Children, CSSProperties, createElement } from 'react';
 import Indicator, { IndicatorProps, IndicateLevel } from './Indicator';
 export interface LazyLoadProps extends BaseComponentProps {
     width?: string
@@ -23,17 +23,22 @@ export default function LazyLoad({ children, refForward, className, style, onRen
     return (
         <>
             {showIndicator && <Indicator {...showIndicator} style={{ ...style, transition: "opacity 2s ease" }} className={className} />}
-            {Children.map(children, (child) =>
-                cloneElement(child, {
-                    ref: refForward,
-                    style: child.props.style,
-                    onLoad: () => {
-                        setShowIndicator(null)
-                    },
-                    onError: () => {
-                        setShowIndicator({ level: IndicateLevel.ERROR })
-                    }
-                })
+            {Children.map(children, (child: any) => {
+                if (typeof child == 'object') {
+                    return cloneElement(child, {
+                        ref: refForward,
+                        ...(child.props || {}),
+                        onLoad: () => {
+                            setShowIndicator(null)
+                        },
+                        onError: () => {
+                            setShowIndicator({ level: IndicateLevel.ERROR })
+                        }
+                    })
+                } else {
+                    return child
+                }
+            }
             )}
         </>
     )
