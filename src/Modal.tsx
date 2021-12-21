@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import BaseComponentProps from "./BaseComponentProps";
 import { useTimeout } from "./utils";
 
@@ -20,6 +20,7 @@ const styleModal = css({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(0, 0, 0, 0.50)",
+    backdropFilter:'blur(5px)',
     transition: "opacity 400ms ease-in",
     "& > div": {
         margin: "0.8rem",
@@ -32,29 +33,32 @@ export interface ModalProps extends BaseComponentProps {
     onClose: () => void
     delay?: number
 }
-export function Modal({ children, onClose, open, style, delay = 500 }: ModalProps) {
-    const [setTimeout] = useTimeout()
-    const [visibility, setVisibility] = useState(open)
-    useEffect(() => {
-        if (visibility !== open) {
-            if (open) {
-                setVisibility(true)
-            } else {
-                setTimeout(() => setVisibility(false), delay)
+export const Modal = forwardRef<HTMLDivElement,ModalProps>(
+    function Modal({ children, onClose, open, style, delay = 500 }: ModalProps, refForward) {
+        const [setTimeout] = useTimeout()
+        const [visibility, setVisibility] = useState(open)
+        useEffect(() => {
+            if (visibility !== open) {
+                if (open) {
+                    setVisibility(true)
+                } else {
+                    setTimeout(() => setVisibility(false), delay)
+                }
             }
-        }
-    }, [open])
-    return (<div
-        onClick={onClose}
-        style={{
-            opacity: open ? 1 : 0,
-            visibility: (visibility ? 'visible' : 'hidden'),
-            ...style
-        }}
-        className={styleModal}>
-        <div>
-            {children}
-        </div>
-    </div >
-    )
-}
+        }, [open])
+        return (<div
+            onClick={onClose}
+            style={{
+                opacity: open ? 1 : 0,
+                visibility: (visibility ? 'visible' : 'hidden'),
+                ...style
+            }}
+            className={styleModal}
+            ref={refForward}
+        >
+            <div>
+                {children}
+            </div>
+        </div >
+        )
+    })

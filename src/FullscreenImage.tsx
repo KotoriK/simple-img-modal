@@ -1,5 +1,5 @@
 import debounce from "@mui/utils/debounce"
-import { useRef, useState, CSSProperties, useCallback, useEffect, ImgHTMLAttributes, forwardRef, Children, MutableRefObject } from "react"
+import { useRef, useState, CSSProperties, useCallback, useEffect, ImgHTMLAttributes, forwardRef, } from "react"
 import { useTimeout } from "./utils"
 import { awaitImage } from 'await-res'
 import { Modal } from "./Modal"
@@ -11,9 +11,6 @@ const styleTransition = css({
 })
 export interface FullscreenImageProp extends ImgHTMLAttributes<HTMLImageElement> {
     img: HTMLImageElement
-}
-const lockBody = (lock: boolean) => {
-    document.documentElement.style.overflow = lock ? 'hidden' : ''
 }
 
 const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
@@ -29,35 +26,35 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
 
         const [setTimeout, clearAll] = useTimeout()
         const [showImage, setShowImage] = useState(false)
-        const resize = useCallback(debounce(async () => {
-            const height = rectHeight.current//要求与stillStyle一致
-            await awaitImage(img)
-            const { naturalWidth, naturalHeight } = img
-            const width = height * naturalWidth / naturalHeight
-            setStillStyle({
-                position: 'absolute',
-                top: 0, left: 0,
-                width: width, height: height,
-            })
-            let targetHeight: number
-            let targetWidth: number
-            targetHeight = innerHeight - (modalPadding * 4)
-            targetWidth = targetHeight * naturalWidth / naturalHeight
+        const resize = useCallback(
+            debounce(async () => {
+                const height = rectHeight.current//要求与stillStyle一致
+                await awaitImage(img)
+                const { naturalWidth, naturalHeight } = img
+                const width = height * naturalWidth / naturalHeight
+                setStillStyle({
+                    position: 'absolute',
+                    top: 0, left: 0,
+                    width: width, height: height,
+                })
+                let targetHeight: number
+                let targetWidth: number
+                targetHeight = innerHeight - (modalPadding * 4)
+                targetWidth = targetHeight * naturalWidth / naturalHeight
 
-            if (targetWidth > innerWidth) {
-                targetWidth = innerWidth - (modalPadding * 4)
-                targetHeight = targetWidth / naturalWidth * naturalHeight
-            }
+                if (targetWidth > innerWidth) {
+                    targetWidth = innerWidth - (modalPadding * 4)
+                    targetHeight = targetWidth / naturalWidth * naturalHeight
+                }
 
-            const scaleX = targetWidth / width
-            const scaleY = targetHeight / height
-            setEndStyle({
-                zIndex: 9999,
-                //`translate(${(targetWidth-width)/2+(window.innerWidth-targetWidth)/2}px,${(targetHeight-height)/2+(window.innerHeight-targetHeight)/2}px) scale(${scaleX},${scaleY})`
-                transform: `translate(${(innerWidth - width) / 2}px,${(innerHeight - height) / 2}px) scale(${scaleX},${scaleY})`
-            })
-        }), [img])
-        const refreshPos = useCallback(async () => {
+                const scaleX = targetWidth / width
+                const scaleY = targetHeight / height
+                setEndStyle({
+                    //`translate(${(targetWidth-width)/2+(window.innerWidth-targetWidth)/2}px,${(targetHeight-height)/2+(window.innerHeight-targetHeight)/2}px) scale(${scaleX},${scaleY})`
+                    transform: `translate(${(innerWidth - width) / 2}px,${(innerHeight - height) / 2}px) scale(${scaleX},${scaleY})`
+                })
+            }), [img])
+        const refreshPos = useCallback(() => {
             const { x, y, height } = img.getBoundingClientRect()
             rectHeight.current = height
             setStartStyle({
@@ -65,9 +62,7 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
             })
             resize()
         }, [img])
-        useEffect(() => {
-            refreshPos()
-        }, [className, style, img])
+        useEffect(refreshPos, [className, style, img])
 
         useEffect(() => {
             resize()
@@ -84,11 +79,11 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
             } else {
                 setShowImage(false)
             }
-            lockBody(fullscreen)
         }, [fullscreen])
 
         useEffect(() => {
             const open = () => {
+                refreshPos()
                 setFullscreen(true)
             }
             img.addEventListener('click', open)
@@ -98,8 +93,7 @@ const FullscreenImage = forwardRef<HTMLImageElement, FullscreenImageProp>(
             }
         }, [img])
         return <Modal open={fullscreen} onClose={() => { setFullscreen(false) }}>
-            <img
-                ref={refForward}
+            <img ref={refForward}
                 style={{ ...stillStyle, ...showImage ? endStyle : startStyle }}
                 className={styleTransition} {...prop} />
             {children}

@@ -32,7 +32,6 @@ function clickHandler(e: Event) {
     const img = e.target as HTMLImageElement
     if (!lastImg) {
         showModal(img)
-
     } else if (lastImg != img) {
         hideModal()
         showModal(img)
@@ -40,7 +39,7 @@ function clickHandler(e: Event) {
     lastImg = img
 }
 const FIModal = ({ img, src }) => {
-    const refFloat = useRef()
+    const refFloat = useRef<any>()
     const refBtn = useRef<any>()
     return <FullscreenImage
         ref={refFloat}
@@ -50,13 +49,10 @@ const FIModal = ({ img, src }) => {
             const func = refBtn.current?.refresh
             if (func) {
                 func()
-                console.log('!')
             }
-
         }}
     >
         <FloatButton
-            open={true}
             refFloat={refFloat}
             ref={refBtn}
         >

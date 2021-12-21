@@ -39,9 +39,9 @@ export enum GPSAltitudeRef {
 }
 export function GPSToReadble(info: GPSInfo): GPSReadableInfo {
     return {
-        altitude: '海拔' + (info.altitudeRef == 0 ? '' : '-') + info.altitude,
-        latitude: (info.latitudeRef == 'N' ? '北纬' : '南纬') + info.latitude,
-        longitude: (info.longitudeRef == 'W' ? '西经' : '东经') + info.longitude,
+        altitude: '海拔 ' + (info.altitudeRef == 0 ? '' : '-') + info.altitude,
+        latitude: (info.latitudeRef == 'N' ? '北纬' : '南纬') + parseFloat(info.latitude).toPrecision(3) + '°',
+        longitude: (info.longitudeRef == 'W' ? '西经' : '东经') + parseFloat(info.longitude).toPrecision(3) + '°',
         map: (<BaiduMap lat={info.latitude} lng={info.longitude} />),
         speed: `${info.speed} ${info.speedRef}`
     }
