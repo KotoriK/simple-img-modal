@@ -34,7 +34,7 @@
     "@mui/utils": "^5.2.3",
     "@popperjs/core": "^2.10.2",
     "await-res": "github:KotoriK/await-res",
-    "exifreader": "^3.16.0",
+    "exifreader": "^4.6.0",
     "react": "^17.0.2",
     "react-collapse": "^5.1.0",
     "react-dom": "^17.0.2",
